@@ -18,84 +18,115 @@ Shoes.app :title => "Rubydoro" do
           flow do
             para "#{@counter += 1} - "
             para @task.text
-            @gopomodoro = button "Go Pomodoro"
-            para "[Interruptions: "
-            [1..@intcounter].each do
-               para "* " 
+            button "Go Pomodoro" do
+              window :title => "Pomodoro" do
+                background darkred
+                @seconds = 1500
+                @paused = false
+
+                def display_time
+                  @display.clear do
+                  title "%02d:%02d" % [@seconds / 60 % 60, @seconds % 60] , :stroke => @paused ? gray : white
+                  end
+                end
+
+                @display = stack
+                display_time
+
+                button "Interruption", :width => '100%' do
+                  @paused = true
+                  display_time
+                end
+        
+                button "Go", :width => '100%' do
+                  @paused = false
+                  display_time
+                end
+
+                animate(1) do
+                  @seconds -= 1 unless (@paused || @seconds == 0)
+                  display_time
+                end
+              end
+
             end
-            para "]"
+            #para "[Interruptions: "
+            #[1..@intcounter].each do
+            #   para "* " 
+            #end
+            #para "]"
             @done = button "Done"
           end
         end
       end
-      @shortbreak = button "Short Break" 
-      @longbreak = button "Long Break"
+      
+      button "Short Break" do
+        window :title => "Short Break" do
+          background darkred
+          @sbtime = 300
+          @p = false
+
+          def display_timesb
+            @displaysb.clear do
+              title "%02d:%02d" % [@sbtime / 60 % 60, @sbtime % 60] , :stroke => @p ? gray : white
+            end
+          end
+
+          @displaysb = stack
+          display_timesb
+
+          button "Interruption", :width => '100%' do
+            @p = true
+            display_timesb
+          end
+        
+          button "Go", :width => '100%' do
+            @p = false
+            display_timesb
+          end
+  
+          animate(1) do
+            @sbtime -= 1 unless (@p || @sbtime == 0)
+            display_timesb
+          end
+        end
+      end 
+
+      @longbreak = button "Long Break" do
+        window :title => "Long Break" do
+          background darkred
+          @lbtime = 1800
+          @p2 = false
+
+          def display_timelb
+            @displaylb.clear do
+              title "%02d:%02d" % [@lbtime / 60 % 60, @lbtime % 60] , :stroke => @p ? gray : white
+            end
+          end
+
+          @displaylb = stack
+          display_timelb
+
+          button "Interruption", :width => '100%' do
+            @p = true
+            display_timelb
+          end
+        
+          button "Go", :width => '100%' do
+            @p = false
+            display_timelb
+          end
+  
+          animate(1) do
+            @lbtime -= 1 unless (@p2 || @lbtime == 0)
+            display_timelb
+          end
+
+        end
+      end
+
     end
     @main.close
   end
 
-  @gopomodoro.click do
-  	window :title => "Pomodoro" do
-      background darkred
-      @seconds = 1500
-      @paused = false
-
-      def display_time
-        @display.clear do
-          title "%02d:%02d" % [@seconds / 60 % 60, @seconds % 60] , :stroke => @paused ? gray : white
-        end
-      end
-
-      @display = stack
-      display_time
-
-      button "Interruption", :width => '100%' do
-        @paused = true
-        display_time
-      end
-        
-      button "Go", :width => '100%' do
-        @paused = false
-        display_time
-      end
-
-      animate(1) do
-        @seconds -= 1 unless (@paused || @seconds == 0)
-        display_time
-      end
-    end
-  end
-
-  # @shortbreak.click do
-  #   window :title => "Short Break" do
-  #     background darkred
-  #     @sbtime = 300
-  #     @p = false
-
-  #     def display_time
-  #       @display.clear do
-  #         title "%02d:%02d" % [@sbtime / 60 % 60, @sbtime % 60] , :stroke => @p ? gray : white
-  #       end
-  #     end
-
-  #     @display = stack
-  #     display_time
-
-  #     button "Interruption", :width => '100%' do
-  #       @p = true
-  #       display_time
-  #     end
-        
-  #     button "Go", :width => '100%' do
-  #       @p = false
-  #       display_time
-  #     end
-
-  #     animate(1) do
-  #       @sbtime -= 1 unless (@p || @sbtime == 0)
-  #       display_time
-  #     end
-  #   end
-
-  # end
 end
