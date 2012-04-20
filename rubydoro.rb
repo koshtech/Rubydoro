@@ -14,6 +14,7 @@ Shoes.app :title => "Rubydoro", :width => 300, :height => 160 do
       end
       @task = edit_line :width => 400, :margin_left => 10, :margin_top => 10
       @counter = 0
+      @done = false
       button "Add", :margin_left => 5, :margin_top => 10 do
         stack do
           @f = flow do
@@ -132,18 +133,15 @@ Shoes.app :title => "Rubydoro", :width => 300, :height => 160 do
               end
             end
 
-            button "Done" do
-              @f.clear
-            end
-
+            para "Done? ", :stroke => white
+            check
+            
             flow do
               para "------------------------------------------------------------------------------------------------------------------------------------------------------------------------", :stroke => white
             end
           end
         end
-      end
-      
-      
+      end      
 
     end
     @main.close
