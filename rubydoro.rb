@@ -15,20 +15,20 @@ Shoes.app :title => "Rubydoro" do
       @counter = 0
       button "Add" do
         stack do
-          flow do
-            @s = para "#{@counter += 1} ~> "
-            @t = para @task.text
+          @f = flow do
+            para "#{@counter += 1} ~> ", :stroke => white
+            para @task.text, :stroke => white
             para " "
-            @gopomodoro = button "Go Pomodoro" do
+            @task.text = ""
+            button "Go Pomodoro" do
               window :title => "Pomodoro" do
                 background darkred
                 @seconds = 1500
                 @paused = false
-                @int = "Interruptions: "
 
                 def display_time
                   @display.clear do
-                  title "%02d:%02d" % [@seconds / 60 % 60, @seconds % 60] , :stroke => @paused ? gray : white
+                    title "%02d:%02d" % [@seconds / 60 % 60, @seconds % 60] , :stroke => @paused ? gray : white
                   end
                 end
 
@@ -37,7 +37,8 @@ Shoes.app :title => "Rubydoro" do
 
                 button "Interruption", :width => '100%' do
                   @paused = true
-                  display_time   
+                  display_time 
+                  para "* ", :stroke => white
                 end
         
                 button "Go", :width => '100%' do
@@ -45,7 +46,7 @@ Shoes.app :title => "Rubydoro" do
                   display_time
                 end
 
-                para @int
+                para "Interruptions: ", :stroke => white
 
                 animate(1) do
                   @seconds -= 1 unless (@paused || @seconds == 0)
@@ -55,7 +56,7 @@ Shoes.app :title => "Rubydoro" do
 
             end
 
-            @sb = button "Short Break" do
+            button "Short Break" do
               window :title => "Short Break" do
                 background darkred
                 @sbtime = 300
@@ -70,7 +71,7 @@ Shoes.app :title => "Rubydoro" do
                 @displaysb = stack
                 display_timesb
 
-                button "Interruption", :width => '100%' do
+                button "Pause", :width => '100%' do
                   @p = true
                   display_timesb
                 end
@@ -87,7 +88,7 @@ Shoes.app :title => "Rubydoro" do
               end
             end 
 
-            @lb = button "Long Break" do
+            button "Long Break" do
               window :title => "Long Break" do
                 background darkred
                 @lbtime = 1800
@@ -102,7 +103,7 @@ Shoes.app :title => "Rubydoro" do
                 @displaylb = stack
                 display_timelb
 
-                button "Interruption", :width => '100%' do
+                button "Pause", :width => '100%' do
                   @p2 = true
                   display_timelb
                 end
@@ -119,13 +120,8 @@ Shoes.app :title => "Rubydoro" do
               end
             end
 
-            @done = button "Done" do
-              @s.hide
-              @t.hide
-              @gopomodoro.hide
-              @sb.hide
-              @lb.hide
-              @done.hide
+            button "Done" do
+              @f.clear
             end
 
           end
